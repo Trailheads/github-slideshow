@@ -1,0 +1,84 @@
+/*******************************************************************************
+** Author: Enzo Flores
+** Program: bag_of_marbles.cpp
+** Description: A program that simulates a bag of marbles as simply as possible.
+*******************************************************************************/
+
+#include <iostream>
+
+struct bag;
+struct marble;
+
+void add_marble(bag *, int);
+void remove_marble(bag *);
+void resize(bag *);
+void initialize_bag(bag *);
+
+
+struct bag {
+    struct marble * marbles;
+    int size;
+    int capacity;
+};
+
+
+struct marble {
+    int ID;
+};
+
+
+void add_marble(bag * bag, int ID) {
+    if(bag->size == bag->capacity) {
+        resize(bag);
+    }
+
+    bag->marbles[bag->size].ID = ID;
+    bag->size += 1;
+}
+
+
+void remove_marble(bag * bag) {
+    bag->marbles[bag->size].ID = 0;
+    bag->size -= 1;
+}
+
+
+void resize(bag * bag) {
+    bag->capacity = bag->capacity * 2;
+    bag->marbles = new marble[bag->capacity];
+}
+
+
+void initialize_bag(bag * bag) {
+    bag->size = 0;
+    bag->capacity = 10;
+    bag->marbles = new marble[bag->capacity];
+
+    for(int i = 0; i < bag->size; i++) {
+        bag->marbles[i].ID = 0;
+    }
+}
+
+
+int main() {
+    bag marbles;
+    initialize_bag(&marbles);
+    
+    std::cout << "\nAdding marbles to bag...\n\n";
+    for(int i = 0; i < marbles.capacity; i++) {
+        add_marble(&marbles, i);
+        std::cout << "   marble #: " << i << " ID #: " << marbles.marbles[i].ID << std::endl;
+    }
+
+    std::cout << "\nRemoving marbles in bag...\n";
+    for(int i = 0; i < marbles.capacity; i++) {
+        remove_marble(&marbles);
+    }
+
+    std::cout << "\nTesting if marbles ID #'s have been reset to 0...\n\n";
+    for(int i = 0; i < marbles.capacity; i++) {
+        std::cout << "   marble #: " << i << " ID #: " << marbles.marbles[i].ID << std::endl;
+    }
+
+    return 0;
+}
